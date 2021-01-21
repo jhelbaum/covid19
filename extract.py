@@ -1,10 +1,34 @@
 #!/usr/bin/env python3
 
+import argparse
 import csv
 import datetime
 import json
+import os
 
-datafile = "scraped/2021_01_18_18_34_56.json"
+parser = argparse.ArgumentParser()
+parser.add_argument("-i", "--infile", help="input file with scraped json data")
+parser.add_argument("-d", "--indir", help="directory with scraped json data files")
+parser.add_argument("-l", "--last_update_filename", help="filename to store last update time", default='last_update.txt')
+parser.add_argument("-v", "--verbose", action="store_true")
+args = parser.parse_args()
+
+last_update_filename = args.last_update_filename
+last_update_pathname = os.path.join(args.indir, last_update_filename)
+
+with open(last_update_pathname) as last_update_file:
+    recorded_last_update = last_update_file.readline().rstrip()
+print('Last saved update: ' + recorded_last_update)
+
+datafile = args.infile
+if datafile is None and args.indir is not None:
+    datafile = os.path.join(args.indir, recorded_last_update + '.json')
+    # datafile = os.path.join(args.indir,sorted(os.listdir(args.indir))[-1])
+if datafile is None:
+    print("Need either -i or -d!")
+    exit(-1)
+
+
 with open(datafile) as json_file:
     data = json.load(json_file)
 
@@ -66,7 +90,7 @@ for entry in vaccinated_by_date:
     entries[date_string(date)]['First dose'] = entry['vaccinated']
     entries[date_string(date)]['Second dose'] = entry['vaccinated_seconde_dose']
 
-columns = ['Date', 'Cases', 'Recoveries', 'Fatalities', 'Tests', 'Positive', 'Hospitalizations', 'Ventilators', 'Critical', 'Serious', 'Moderate', 'Mild', 'Cumulative serious', 'First dose', 'Second dose']
+columns = ['Date', 'Cases', 'Fatalities', 'Recoveries', 'Tests', 'Positive', 'Hospitalizations', 'Ventilators', 'Critical', 'Serious', 'Moderate', 'Mild', 'Cumulative serious', 'First dose', 'Second dose']
 
 with open('cases.csv', 'w', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=columns, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
