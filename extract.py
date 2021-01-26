@@ -71,6 +71,7 @@ for entry in patients_by_date:
     entries[date_string(date)]['Ventilators'] = entry["CountBreath"]
     entries[date_string(date)]['Critical'] = entry["CountCriticalStatus"]
     entries[date_string(date)]['Serious'] = entry["CountHardStatus"]
+    entries[date_string(date)]['Serious but not ventilated'] = entry["CountHardStatus"] - entry["CountBreath"]
     entries[date_string(date)]['Moderate'] = entry["CountMediumStatus"]
     entries[date_string(date)]['Mild'] = entry["CountEasyStatus"]
     entries[date_string(date)]['Cumulative serious'] = entry["CountSeriousCriticalCum"]
@@ -90,7 +91,7 @@ for entry in vaccinated_by_date:
     entries[date_string(date)]['First dose'] = entry['vaccinated']
     entries[date_string(date)]['Second dose'] = entry['vaccinated_seconde_dose']
 
-columns = ['Date', 'Cases', 'Fatalities', 'Recoveries', 'Tests', 'Positive', 'Hospitalizations', 'Ventilators', 'Critical', 'Serious', 'Moderate', 'Mild', 'Cumulative serious', 'First dose', 'Second dose']
+columns = ['Date', 'Cases', 'Fatalities', 'Recoveries', 'Tests', 'Positive', 'Hospitalizations', 'Ventilators', 'Critical', 'Serious', 'Serious but not ventilated', 'Moderate', 'Mild', 'Cumulative serious', 'First dose', 'Second dose']
 
 with open('cases.csv', 'w', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=columns, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
