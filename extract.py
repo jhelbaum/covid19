@@ -8,7 +8,7 @@ import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--infile", help="input file with scraped json data")
-parser.add_argument("-d", "--indir", help="directory with scraped json data files")
+parser.add_argument("-d", "--indir", help="directory with scraped json data files", default="scraped/")
 parser.add_argument("-l", "--last_update_filename", help="filename to store last update time", default='last_update.txt')
 parser.add_argument("-v", "--verbose", action="store_true")
 args = parser.parse_args()
